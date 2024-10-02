@@ -5,51 +5,32 @@ const productos = [
     { nombre: 'Item C', precio: 20 }
 ];
 
-// Usamos un método de búsqueda para obtener el producto por su atributo nombre
+// Usamos un metodo de busqueda para obtener el producto por su atributo nombre
 function obtenerProducto(nombre) {
     return productos.find(producto => producto.nombre === nombre);
 }
 
-// Función para calcular el total por cada producto
+// Funcion para calcular el total por cada producto
 function calcularTotalProducto(unidades, producto) {
     return unidades * producto.precio;
 }
 
-// Guardar en localStorage
-function guardarCarrito(carrito) {
-    localStorage.setItem('carrito', JSON.stringify(carrito));
-}
-
-// Recuperar del localStorage
-function cargarCarrito() {
-    const carritoGuardado = localStorage.getItem('carrito');
-    return carritoGuardado ? JSON.parse(carritoGuardado) : { itemA: 0, itemB: 0, itemC: 0 };
-}
-
-// Funcion del carrito
+// Funcion del carrito (basado en la preentrega 1)
 function simuladorCarrito() {
-    // Obtener valores desde los inputs
-    const itemA = parseInt(document.getElementById("itemA").value) || 0;
-    const itemB = parseInt(document.getElementById("itemB").value) || 0;
-    const itemC = parseInt(document.getElementById("itemC").value) || 0;
+    const itemA = parseInt(document.getElementById("itemA").value);
+    const itemB = parseInt(document.getElementById("itemB").value);
+    const itemC = parseInt(document.getElementById("itemC").value);
 
-    // Guardar las cantidades en el carrito (en localStorage)
-    const carrito = { itemA, itemB, itemC };
-    guardarCarrito(carrito);
-
-    // Calcular el total de cada producto
     const totalItemA = calcularTotalProducto(itemA, obtenerProducto('Item A'));
     const totalItemB = calcularTotalProducto(itemB, obtenerProducto('Item B'));
     const totalItemC = calcularTotalProducto(itemC, obtenerProducto('Item C'));
 
-    // Calcular totales
     const totalProductos = itemA + itemB + itemC;
     const precioTotal = totalItemA + totalItemB + totalItemC;
 
     let aplicarDescuento = false;
     let precioFinal;
 
-    // Aplicar descuento si el total de productos es mayor o igual a 10
     if (totalProductos >= 10) {
         precioFinal = precioTotal - (precioTotal * 0.25);
         aplicarDescuento = true;
@@ -57,11 +38,10 @@ function simuladorCarrito() {
         precioFinal = precioTotal;
     }
 
-    // Mostrar los resultados
     mostrarResultado(totalItemA, totalItemB, totalItemC, precioTotal, aplicarDescuento, precioFinal);
 }
 
-// Función para mostrar los resultados
+// Funcion para mostrar los resultados
 function mostrarResultado(totalItemA, totalItemB, totalItemC, precioTotal, aplicarDescuento, precioFinal) {
     const resultadoDiv = document.getElementById("resultado");
     resultadoDiv.innerHTML = `
@@ -75,16 +55,6 @@ function mostrarResultado(totalItemA, totalItemB, totalItemC, precioTotal, aplic
     `;
 }
 
-// Cargar los valores del carrito desde localStorage al cargar la página
-function cargarValoresIniciales() {
-    const carrito = cargarCarrito();
-    document.getElementById("itemA").value = carrito.itemA;
-    document.getElementById("itemB").value = carrito.itemB;
-    document.getElementById("itemC").value = carrito.itemC;
-}
-
 // Event listener para el botón
 document.getElementById("calcularTotal").addEventListener("click", simuladorCarrito);
 
-// Cargar valores iniciales al cargar la página
-window.addEventListener("load", cargarValoresIniciales);
